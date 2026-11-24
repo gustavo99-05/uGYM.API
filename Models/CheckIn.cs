@@ -7,4 +7,8 @@
     public DateTime DataHora { get; set; }
 
     public bool Permitido { get; set; }
+
+    // Nullable to preserve historical rows without inventing their timezone.
+    public DateOnly? DiaLocal { get; set; }
+    public int? OperadorId { get; set; }
 }

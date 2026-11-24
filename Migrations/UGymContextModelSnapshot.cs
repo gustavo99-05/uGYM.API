@@ -36,10 +36,22 @@ namespace uGYM.API.Migrations
                     b.Property<DateTime>("DataHora")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateOnly?>("DiaLocal")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("OperadorId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Permitido")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AlunoId", "DataHora");
+
+                    b.HasIndex("AlunoId", "DiaLocal")
+                        .IsUnique()
+                        .HasFilter("[DiaLocal] IS NOT NULL AND [Permitido] = 1");
 
                     b.ToTable("CheckIns");
                 });
@@ -66,6 +78,7 @@ namespace uGYM.API.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("Valor")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("Vencimento")
@@ -121,6 +134,39 @@ namespace uGYM.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Alunos");
+                });
+
+            modelBuilder.Entity("uGYM.API.Models.Usuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("NomeNormalizado")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("SenhaHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NomeNormalizado")
+                        .IsUnique();
+
+                    b.ToTable("Usuarios");
                 });
 #pragma warning restore 612, 618
         }
